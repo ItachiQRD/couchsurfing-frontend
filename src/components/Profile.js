@@ -14,6 +14,7 @@ const api = axios.create({
   withCredentials: true,
 });
 
+
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -27,7 +28,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       console.log('Token:', token);
       console.log('URL de la requête:', `${API_URL}/profile`);
-      const response = await api.get('api/profile', {
+      const response = await api.get('profile', {
         headers: { 'x-auth-token': token }
       });
       console.log('Réponse du serveur:', response.data);
