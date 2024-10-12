@@ -27,7 +27,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       console.log('Token:', token);
       console.log('URL de la requête:', `${API_URL}/profile`);
-      const response = await api.get('/profile', {
+      const response = await api.get('api/profile', {
         headers: { 'x-auth-token': token }
       });
       console.log('Réponse du serveur:', response.data);

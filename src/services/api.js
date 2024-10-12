@@ -43,7 +43,7 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
+ 
 export const register = (username, email, password) => {
   return api.post('/auth/register', { username, email, password });
 };
@@ -57,11 +57,11 @@ export const forgotPassword = (email) => {
 };
 
 export const getProfile = () => {
-  return api.get('/profile/me');
+  return api.get('/profile');
 };
 
 export const updateProfile = (profileData) => {
-  return api.put('/profile/me', profileData);
+  return api.put('/profile', profileData);
 };
 
 export const createListing = (listingData) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useAuth } from 'react';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Spinner, Alert, Badge } from 'react-bootstrap';
 import { FaMapMarkerAlt, FaCoffee,FaCheck, FaStar, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import axios from 'axios';
@@ -19,24 +19,33 @@ function Profile() {
   const [editedProfile, setEditedProfile] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { refreshToken } = useAuth();
 
   const fetchProfile = useCallback(async () => {
     try {
       setIsLoading(true);
-      const token = localStorage.getItem('token');
-      const response = await api.get('/users/profile', {
-        headers: { 'x-auth-token': token }
-      });
+      const response = await api.get('/profile');
       setProfile(response.data);
       setEditedProfile(response.data);
       setError(null);
     } catch (error) {
-      console.error('Erreur lors de la récupération du profil', error);
-      setError('Impossible de charger le profil. Veuillez réessayer.');
+      console.error('Erreur détaillée:', error.response || error);
+      if (error.response && error.response.status === 401) {
+        try {
+          await refreshToken();
+          const retryResponse = await api.get('/profile');
+          setProfile(retryResponse.data);
+          setEditedProfile(retryResponse.data);
+        } catch (refreshError) {
+          setError('Session expirée. Veuillez vous reconnecter.');
+        }
+      } else {
+        setError('Impossible de charger le profil. Veuillez réessayer.');
+      }
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [refreshToken]);
 
   useEffect(() => {
     fetchProfile();
