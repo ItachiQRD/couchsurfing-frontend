@@ -1,0 +1,28 @@
+.create-listing-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.amenities-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.amenity-checkbox {
+  margin-right: 10px;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .create-listing-container {
+    padding: 1rem;
+  }
+}
