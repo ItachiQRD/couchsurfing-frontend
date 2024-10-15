@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import LocationInput from '../components/LocationInput';
 import '../styles/createlisting.css';
 
 const amenitiesList = [
@@ -16,6 +17,8 @@ function CreateListing() {
     title: '',
     description: '',
     location: '',
+    latitude: null,
+    longitude: null,
     maxGuests: 1,
     amenities: [],
     price: '',
@@ -42,6 +45,15 @@ function CreateListing() {
       amenities: prevState.amenities.includes(amenity)
         ? prevState.amenities.filter(a => a !== amenity)
         : [...prevState.amenities, amenity]
+    }));
+  };
+
+  const handleLocationSelect = (fullLocation, lat, lon) => {
+    setFormData(prev => ({
+      ...prev,
+      location: fullLocation,
+      latitude: lat,
+      longitude: lon
     }));
   };
 
@@ -111,14 +123,7 @@ function CreateListing() {
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
-              <Form.Label>Localisation</Form.Label>
-              <Form.Control
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleChange}
-                required
-              />
+            <LocationInput onLocationSelect={handleLocationSelect} />
             </Form.Group>
           </Col>
         </Row>
