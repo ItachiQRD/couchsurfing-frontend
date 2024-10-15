@@ -3,8 +3,6 @@ import { useParams } from 'react-router-dom';
 import { Card, ListGroup, ListGroupItem, Carousel } from 'react-bootstrap';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
-const UPLOADS_URL = 'http://localhost:5000/uploads';
 
 function ListingDetail() {
   const [listing, setListing] = useState(null);
@@ -13,7 +11,7 @@ function ListingDetail() {
   useEffect(() => {
     const fetchListing = async () => {
       try {
-        const response = await axios.get(`${API_URL}/listing/${id}`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/listing/${id}`);
         setListing(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des détails de l\'hébergement', error);
@@ -33,7 +31,7 @@ function ListingDetail() {
             <Carousel.Item key={index}>
               <img
                 className="d-block w-100"
-                src={`${UPLOADS_URL}/${listing.images[0]}`}
+                src={`${process.env.REACT_APP_UPLOADS_URL}/${listing.images[0]}`}
                 alt={`Vue ${index + 1} de l'hébergement`}
               />
             </Carousel.Item>

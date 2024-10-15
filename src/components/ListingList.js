@@ -3,8 +3,7 @@ import { Card, Button, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api';
-const UPLOADS_URL = 'http://localhost:5000../uploads';
+
 
 function ListingList() {
   const [listings, setListings] = useState([]);
@@ -12,7 +11,7 @@ function ListingList() {
   useEffect(() => {
     const fetchListings = async () => {
       try {
-        const response = await axios.get(`${API_URL}/listing`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/listing`);
         setListings(response.data);
       } catch (error) {
         console.error('Erreur lors de la récupération des hébergements', error);
@@ -30,7 +29,7 @@ function ListingList() {
             <Card.Img 
               variant="top" 
               src={listing.thumbnails && listing.thumbnails.length > 0 
-                ? `${UPLOADS_URL}/thumb-${listing.thumbnails[0]}`
+                ? `${process.env.REACT_APP_UPLOADS_URL}/${listing.thumbnails[0]}`
                 : 'https://via.placeholder.com/300x200'
               } 
               alt={listing.title}
