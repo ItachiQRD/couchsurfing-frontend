@@ -5,9 +5,9 @@ import '../styles/listdetails.css';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import { Container, Row, Col, Card, Carousel, ListGroup, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Carousel, ListGroup, Button,Alert } from 'react-bootstrap';
 import { FaUser, FaMapMarkerAlt, FaBed, FaUsers, FaBook } from 'react-icons/fa';
-
+import 'leaflet/dist/leaflet.css';
 
 
 function ListingDetail() {
@@ -29,7 +29,8 @@ function ListingDetail() {
     fetchListing();
   }, [id]);
 
-  if (!listing) return <div>Chargement...</div>;
+
+  if (!listing) return <Alert variant="info">Aucun hébergement trouvé.</Alert>;
  
 
   return (
@@ -100,18 +101,26 @@ function ListingDetail() {
           {/* Carte interactive */}
           <Card className="mb-4">
             <Card.Body>
-              <Card.Title>Emplacement</Card.Title>
-              <MapContainer center={[listing.latitude, listing.longitude]} zoom={13} style={{ height: '400px' }}>
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                />
-                <Marker position={[listing.latitude, listing.longitude]}>
-                  <Popup>
-                    {listing.location}
-                  </Popup>
-                </Marker>
-              </MapContainer>
+            <Card.Title>Emplacement</Card.Title>
+              <div style={{ height: '300px', width: '100%', position: 'relative' }}>
+                {listing.latitude && listing.longitude ? (
+                  <MapContainer 
+                    center={[listing.latitude, listing.longitude]} 
+                    zoom={13} 
+                    style={{ height: '100%', width: '100%' }}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    />
+                    <Marker position={[listing.latitude, listing.longitude]}>
+                      <Popup>{listing.title}</Popup>
+                    </Marker>
+                  </MapContainer>
+                ) : (
+                  <Alert variant="warning">Coordonnées de localisation non disponibles.</Alert>
+                )}
+              </div>
             </Card.Body>
           </Card>
         </Col>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Card, Container, Row, Col, Alert, InputGroup } from 'react-bootstrap';
 import { Link,  } from 'react-router-dom';
 import axios from 'axios';
-import { FaUser, FaEnvelope, FaLock, FaBirthdayCake, FaPhone, FaAddressCard, FaGlobe, FaLanguage, FaEye, FaEyeSlash, FaHome } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaLock, FaBirthdayCake, FaPhone,  FaLanguage, FaEye, FaEyeSlash, FaHome } from 'react-icons/fa';
+import LocationInput from '../components/LocationInput';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -20,8 +21,6 @@ function Register() {
     dateOfBirth: new Date(),
     phoneNumber: '',
     address: '',
-    city: '',
-    country: '',
     languages: '',
     bio: '',
     isHost: false // Ajout du champ isHost
@@ -73,6 +72,13 @@ function Register() {
     if (passwordStrength < 2) return 'danger';
     if (passwordStrength < 4) return 'warning';
     return 'success';
+  };
+
+  const handleLocationSelect = (fullLocation) => {
+    setFormData(prev => ({
+      ...prev,
+      address: fullLocation,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -131,6 +137,7 @@ function Register() {
       </div>
     );
   }
+
 
  return (
   <Container className="py-5">
@@ -288,39 +295,11 @@ function Register() {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label><FaAddressCard /> Adresse</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleChange}
+                <LocationInput 
+                    onLocationSelect={handleLocationSelect} 
+                    initialValue={formData.address}
                   />
                 </Form.Group>
-
-                <Row>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label><FaAddressCard /> Ville</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={6}>
-                    <Form.Group className="mb-3">
-                      <Form.Label><FaGlobe /> Pays</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
 
                 <Form.Group className="mb-3">
                   <Form.Label><FaLanguage /> Langues parlées</Form.Label>

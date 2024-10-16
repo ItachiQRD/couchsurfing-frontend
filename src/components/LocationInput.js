@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Form, ListGroup } from 'react-bootstrap';
 
-const LocationInput = ({ onLocationSelect }) => {
-  const [query, setQuery] = useState('');
+const LocationInput = ({ onLocationSelect,initialValue = '', includeCoordinates = false }) => {
+  const [query, setQuery] = useState(initialValue);
   const [suggestions, setSuggestions] = useState([]);
 
   const searchLocation = async (input) => {
@@ -20,12 +20,13 @@ const LocationInput = ({ onLocationSelect }) => {
     const fullLocation = `${item.display_name}`;
     setQuery(fullLocation);
     setSuggestions([]);
+    console.log('Sélection:', fullLocation, item.lat, item.lon);
     onLocationSelect(fullLocation, item.lat, item.lon);
   };
 
   return (
     <Form.Group>
-      <Form.Label>Localisation</Form.Label>
+      <Form.Label>Adresse</Form.Label>
       <Form.Control
         type="text"
         value={query}
@@ -33,7 +34,7 @@ const LocationInput = ({ onLocationSelect }) => {
           setQuery(e.target.value);
           searchLocation(e.target.value);
         }}
-        placeholder="Entrez une ville"
+        placeholder="Entrez une adresse précise"
       />
       <ListGroup>
         {suggestions.map((item) => (

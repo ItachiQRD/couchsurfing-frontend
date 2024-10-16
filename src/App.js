@@ -18,6 +18,7 @@ import Conversations from './pages/Conversations';
 import Conversation from './pages/Conversation';
 import SearchListings from './pages/SearchListings';
 import CreateListing from './pages/CreateListing';
+import EditListing from './components/EditListing';
 import Messages from './pages/Messages';
 import axios from 'axios';
 
@@ -73,6 +74,7 @@ function AppContent() {
           <Route path="/search" element={<SearchListings />} />
           <Route path="/listings" element={<ListingList />} />
           <Route path="/listing/:id" element={<ListingDetail />} />
+          <Route path="/edit-listing/:id" element={<EditListing />} />
         </Routes>
       </Container>
       <Footer />

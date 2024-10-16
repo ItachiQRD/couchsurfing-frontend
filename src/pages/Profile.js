@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useAuth } from 'react';
 import { Container, Row, Col, Card, Button, Form, ListGroup, Spinner, Alert, Badge } from 'react-bootstrap';
 import { FaMapMarkerAlt, FaCoffee,FaCheck, FaStar, FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/profile.css';
 
@@ -17,6 +18,7 @@ function Profile() {
   const [profile, setProfile] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState({});
+  const [userListings, setUserListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { refreshToken } = useAuth();
@@ -28,6 +30,8 @@ function Profile() {
       setProfile(response.data);
       setEditedProfile(response.data);
       setError(null);
+      const listingsResponse = await api.get('/listings/user');
+      setUserListings(listingsResponse.data)
     } catch (error) {
       console.error('Erreur détaillée:', error.response || error);
       if (error.response && error.response.status === 401) {
@@ -99,6 +103,18 @@ function Profile() {
     if (!profile) {
       return <Alert variant="info">Aucun profil trouvé.</Alert>;
     }
+
+    const handleDeleteListing = async (listingId) => {
+      if (window.confirm('Êtes-vous sûr de vouloir supprimer cet hébergement ?')) {
+        try {
+          await api.delete(`/listings/${listingId}`);
+          setUserListings(userListings.filter(listing => listing._id !== listingId));
+        } catch (err) {
+          setError('Erreur lors de la suppression de l\'hébergement');
+          console.error(err);
+        }
+      }
+    };
 
     return (
       <Container className="profile-container">
@@ -267,8 +283,27 @@ function Profile() {
             </Card>
           </Col>
         </Row>
-      </Container>
-    );
+        <h2 className="mt-4">Mes Hébergements</h2>
+      <Row>
+        {userListings.map(listing => (
+          <Col md={4} key={listing._id} className="mb-3">
+            <Card>
+              <Card.Img variant="top" src={`${process.env.REACT_APP_UPLOADS_URL}/${listing.images[0]}`} />
+              <Card.Body>
+                <Card.Title>{listing.title}</Card.Title>
+                <Card.Text>{listing.description.substring(0, 100)}...</Card.Text>
+                <Link to={`/edit-listing/${listing._id}`} className="btn btn-primary mr-2">Modifier</Link>
+                <Button variant="danger" onClick={() => handleDeleteListing(listing._id)}>Supprimer</Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      <div className="text-center mt-3">
+        <Link to="/create-listing" className="btn btn-success">Ajouter un nouvel hébergement</Link>
+      </div>
+    </Container>
+  );
   }, [profile, isEditing, editedProfile, handleChange, handleSave, handleEdit, isLoading, error]);
 
   return profileContent;

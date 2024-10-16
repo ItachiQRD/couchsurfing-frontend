@@ -85,6 +85,7 @@ const Profile = () => {
       return { ...prev, [name]: value };
     });
   }, []);
+  
 
   if (isLoading) return <Spinner animation="border" />;
   if (error) return <Alert variant="danger">{error}</Alert>;

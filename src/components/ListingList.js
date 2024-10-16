@@ -3,9 +3,6 @@ import { Card, Button, Row,Container, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import api from "../services/api";
 
-const cleanImageUrl = (url) => {
-  return url.replace(/\s+/g, '%20');
-};
 
 function ListingList() {
   const [listings, setListings] = useState([]);
@@ -32,7 +29,7 @@ function ListingList() {
             <Card>
               <Card.Img 
                 variant="top" 
-                src={cleanImageUrl(`${process.env.REACT_APP_UPLOADS_URL}/${listing.thumbnails[0]}`)}
+                src={`${process.env.REACT_APP_UPLOADS_URL}/${listing.thumbnails[0]}`}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = 'https://via.placeholder.com/300x200?text=Image+non+disponible';

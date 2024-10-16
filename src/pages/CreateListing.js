@@ -49,13 +49,14 @@ function CreateListing() {
   };
 
   const handleLocationSelect = (fullLocation, lat, lon) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData(prevState => ({
+      ...prevState,
       location: fullLocation,
-      latitude: lat,
-      longitude: lon
+      latitude: lat ? parseFloat(lat) : null,
+      longitude: lon ? parseFloat(lon) : null
     }));
   };
+  
 
   const handleImageChange = (e) => {
     setImages([...e.target.files]);
@@ -65,16 +66,21 @@ function CreateListing() {
     e.preventDefault();
     setError('');
     setSuccess('');
-  
+    
     const listingData = new FormData();
     Object.keys(formData).forEach(key => {
+      if (formData[key] !== null && formData[key] !== undefined) {
       if (key === 'amenities') {
         formData[key].forEach(amenity => listingData.append('amenities[]', amenity));
       } else if (key === 'availabilityFrom' || key === 'availabilityTo') {
         listingData.append(key, formData[key].toISOString());
+      } else if (key === 'latitude' || key === 'longitude') {
+        // Envoyez null si la valeur est null, sinon envoyez le nombre
+        listingData.append(key, formData[key] === null ? 'null' : formData[key]);
       } else {
         listingData.append(key, formData[key]);
       }
+    }
     });
 
     // Ajout des images au FormData
@@ -123,7 +129,7 @@ function CreateListing() {
           </Col>
           <Col md={6}>
             <Form.Group className="mb-3">
-            <LocationInput onLocationSelect={handleLocationSelect} />
+              <LocationInput onLocationSelect={handleLocationSelect} />
             </Form.Group>
           </Col>
         </Row>
